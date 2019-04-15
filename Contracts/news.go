@@ -5,7 +5,7 @@ import (
 	"log"
 	"time"
 
-	_ "github.com/go-sql-driver/mysql"
+	"github.com/LoJiPhin/kumparan/Contracts"
 )
 
 //News Adalah struct yang digunakan untuk menyimpan Berita baru
@@ -27,14 +27,12 @@ func failOnError(err error, msg string) {
 	}
 }
 
-//InsertNews adalah blabla
-func (news News) InsertNews() {
-	db := Connect()
-	stmt, _ := db.Prepare("INSERT News SET author=?,body=?,created=?")
-	//failOnError(err, "Failed to Insert News Statment")
-	res, _ := stmt.Exec(news.Author, news.Body, time.Now())
-	//failOnError(err, "Failed to Insert News Execution")
-	fmt.Println("result :", res.RowsAffected)
-	fmt.Println("news :", news)
-	defer db.Close()
+//InsertNews sakksksa
+func (news *News) InsertNews() {
+	db := contracts.Connect()
+	stmt, err := db.Prepare("INSERT news SET author=?,body=?,created=?")
+	failOnError(err, "Failed to Insert News Statment")
+	res, err := stmt.Exec(news.Author, news.Body, time.Now())
+	failOnError(err, "Failed to Insert News Execution")
+	fmt.Println("res", res.LastInsertId)
 }

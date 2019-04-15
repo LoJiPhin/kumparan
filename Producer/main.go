@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/LoJiPhin/kumparan/Contracts"
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/kataras/iris"
 	"github.com/kataras/iris/middleware/logger"
 	"github.com/kataras/iris/middleware/recover"

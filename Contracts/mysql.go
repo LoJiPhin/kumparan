@@ -2,15 +2,21 @@ package contracts
 
 import (
 	"database/sql"
-	"log"
+
+	"github.com/go-sql-driver/mysql"
 )
 
+//Connect sqldb
 func Connect() *sql.DB {
-	db, err := sql.Open("mysql", "docker:docker@tcp(127.0.0.1:3306)/kumparannews")
-
+	dbConfig := mysql.NewConfig()
+	dbConfig.User = "docker"
+	dbConfig.Passwd = "docker"
+	dbConfig.Addr = "mysql:3306"
+	dbConfig.DBName = "kumparannews"
+	dbConfig.Net = "tcp"
+	db, err := sql.Open("mysql", dbConfig.FormatDSN())
 	if err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
-
 	return db
 }

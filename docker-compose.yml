@@ -1,7 +1,7 @@
 version: '2.1'
 
 services:
-  db:
+  mysql:
     build:
       context: ./MySQL
     environment:
@@ -10,11 +10,39 @@ services:
       MYSQL_USER: docker
       MYSQL_PASSWORD: docker
     container_name: kumparan_db
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
     ports:
       - "3306:3306"
     tty: true
- 
-      
+
+  producer:
+    build: 
+       context: ./Producer
+    volumes:
+      - "./Producer:/producer"
+    container_name: kumparan_producer
+    ports:
+      - "3002:3002"
+    tty: true
+    depends_on:
+      - rabbit1
+
+  consumer:
+    build: 
+      context: ./Consumer
+    volumes:
+      - "./Consumer:/consumer"
+    container_name: kumparan_consumer
+    ports:
+      - "3003:3003"
+    tty: true
+    depends_on:
+      - rabbit1
+      - mysql
+
+  
   rabbit1:
     image: "rabbitmq:3-management"
     container_name: kumparan_bus
@@ -27,27 +55,10 @@ services:
     ports:
       - "15672:15672"
       - "5672:5672"
+    tty: true
     labels:
       NAME: "rabbitmq1"
-
-  producer:
-    build: 
-       context: ./Producer
-    container_name: kumparan_producer
-    ports:
-      - "3002:3002"
-    tty: true
-    depends_on:
-      - rabbit1
-      - db
-
-  consumer:
-    build: 
-      context: ./Consumer
-    container_name: kumparan_consumer
-    tty: true
-    depends_on:
-      - rabbit1
-      - db
+volumes:
+  mysql-data:
 
   
