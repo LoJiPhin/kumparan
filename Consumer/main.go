@@ -100,9 +100,10 @@ func main() {
 
 	for r := range replies {
 		log.Printf("Consuming reply number %d", count)
-		news := Contracts.News{}
+		news := contracts.News{}
 		json.Unmarshal(r.Body, &news)
 		fmt.Printf("Author: %s, Body: %s\n", news.Author, news.Body)
+		news.InsertNews()
 		count++
 	}
 }

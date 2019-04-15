@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"log"
 	"time"
+
+	_ "github.com/go-sql-driver/mysql"
 )
 
 //News Adalah struct yang digunakan untuk menyimpan Berita baru

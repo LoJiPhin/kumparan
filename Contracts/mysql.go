@@ -3,8 +3,6 @@ package contracts
 import (
 	"database/sql"
 	"log"
-
-	
 )
 
 func Connect() *sql.DB {

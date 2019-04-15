@@ -32,7 +32,7 @@ func init() {
 var conn *amqp.Connection
 var ch *amqp.Channel
 
-func publishMessages(news Contracts.News) {
+func publishMessages(news contracts.News) {
 	payload, err := json.Marshal(news)
 	failOnError(err, "Failed to marshal JSON")
 
@@ -110,7 +110,7 @@ func main() {
 		// news.Created = currentTime.Format("2006-01-02 15:04:05")
 		// news.InsertNews()
 		// ctx.JSON(iris.Map{"message": "success"})
-		news := Contracts.News{}
+		news := contracts.News{}
 		err := ctx.ReadJSON(&news)
 		failOnError(err, "Failed to Read Json")
 		publishMessages(news)
