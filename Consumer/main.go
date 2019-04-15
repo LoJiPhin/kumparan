@@ -1,12 +1,15 @@
 package main
 
 import (
+	"database/sql"
 	"encoding/json"
 	"flag"
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/LoJiPhin/kumparan/Contracts"
+	"github.com/go-sql-driver/mysql"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/streadway/amqp"
 )
@@ -22,6 +25,20 @@ func failOnError(err error, msg string) {
 	}
 }
 
+//Connect sqldb
+func Connect() *sql.DB {
+	dbConfig := mysql.NewConfig()
+	dbConfig.User = "docker"
+	dbConfig.Passwd = "docker"
+	dbConfig.Addr = "mysql:3306"
+	dbConfig.DBName = "kumparannews"
+	dbConfig.Net = "tcp"
+	db, err := sql.Open("mysql", dbConfig.FormatDSN())
+	if err != nil {
+		panic(err)
+	}
+	return db
+}
 func init() {
 	flag.Parse()
 	initAmqp()
@@ -103,7 +120,14 @@ func main() {
 		news := contracts.News{}
 		json.Unmarshal(r.Body, &news)
 		fmt.Printf("Author: %s, Body: %s\n", news.Author, news.Body)
-		news.InsertNews()
+		db := Connect()
+		defer db.Close()
+		stmt, err := db.Prepare("INSERT news SET author=?,body=?,created=?")
+		failOnError(err, "Failed to Insert News Statment")
+		res, err := stmt.Exec(news.Author, news.Body, time.Now())
+		failOnError(err, "Failed to Insert News Execution")
+		fmt.Println("res", res)
+		//news.InsertNews(db)
 		count++
 	}
 }
