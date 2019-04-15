@@ -7,7 +7,7 @@ import (
 	"log"
 	"time"
 
-	"Kumparan/../../Contracts"
+	"github.com/LoJiPhin/kumparan/Contracts"
 	"github.com/kataras/iris"
 	"github.com/kataras/iris/middleware/logger"
 	"github.com/kataras/iris/middleware/recover"

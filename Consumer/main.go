@@ -6,7 +6,8 @@ import (
 	"fmt"
 	"log"
 
-	"Kumparan/../../Contracts"
+	"github.com/LoJiPhin/kumparan/Contracts"
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/streadway/amqp"
 )
 
