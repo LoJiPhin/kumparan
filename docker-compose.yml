@@ -14,17 +14,6 @@ services:
       - "3306:3306"
     tty: true
  
-  # app:
-  #   build:
-  #     context: ./Go
-  #   volumes:
-  #     - "./Go:/go"
-  #   container_name: kumparan_app
-  #   ports:
-  #     - "8080:8080"
-  #   tty: true
-  #   depends_on:
-      # - db
       
   rabbit1:
     image: "rabbitmq:3-management"
@@ -50,12 +39,15 @@ services:
     tty: true
     depends_on:
       - rabbit1
+      - db
 
   consumer:
     build: 
       context: ./Consumer
     container_name: kumparan_consumer
+    tty: true
     depends_on:
       - rabbit1
+      - db
 
   

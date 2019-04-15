@@ -30,12 +30,11 @@ func failOnError(err error, msg string) {
 //InsertNews adalah blabla
 func (news News) InsertNews() {
 	db := Connect()
-	defer db.Close()
-	//query := fmt.Sprintf(`INSERT INTO News(author, body, created) (` + news.Author + `, ` + news.Body + `,` + news.Created + ` )`)
-	stmt, err := db.Prepare("INSERT News SET author=?,body=?,created=?")
-	failOnError(err, "Failed to Insert News Statment")
-	res, err := stmt.Exec(news.Author, news.Body, time.Now())
-	failOnError(err, "Failed to Insert News Execution")
+	stmt, _ := db.Prepare("INSERT News SET author=?,body=?,created=?")
+	//failOnError(err, "Failed to Insert News Statment")
+	res, _ := stmt.Exec(news.Author, news.Body, time.Now())
+	//failOnError(err, "Failed to Insert News Execution")
 	fmt.Println("result :", res.RowsAffected)
 	fmt.Println("news :", news)
+	defer db.Close()
 }
