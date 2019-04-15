@@ -1,0 +1,56 @@
+version: '2.1'
+
+services:
+  db:
+    build:
+      context: ./MySQL
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: kumparannews
+      MYSQL_USER: docker
+      MYSQL_PASSWORD: docker
+    container_name: kumparan_db
+    ports:
+      - "3306:3306"
+    tty: true
+ 
+  # app:
+  #   build:
+  #     context: ./Go
+  #   volumes:
+  #     - "./Go:/go"
+  #   container_name: kumparan_app
+  #   ports:
+  #     - "8080:8080"
+  #   tty: true
+  #   depends_on:
+      # - db
+
+  producer:
+    build: 
+       context: ./Producer
+    container_name: kumparan_producer
+    ports:
+      - "3002:3002"
+    tty: true
+    depends_on:
+      - rabbit1
+
+  consumer:
+    build: ./Consumer/.
+    depends_on:
+      - rabbit1
+
+  rabbit1:
+    image: "rabbitmq:3-management"
+    hostname: "rabbit1"
+    environment:
+      RABBITMQ_ERLANG_COOKIE: "SWQOKODSQALRPCLNMEQG"
+      RABBITMQ_DEFAULT_USER: "rabbitmq"
+      RABBITMQ_DEFAULT_PASS: "rabbitmq"
+      RABBITMQ_DEFAULT_VHOST: "/"
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    labels:
+      NAME: "rabbitmq1"
